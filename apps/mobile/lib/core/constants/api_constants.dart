@@ -33,4 +33,9 @@ class ApiEndpoints {
   static const String schedule = '/academic/schedule';
   static const String attendance = '/attendance';
   static const String notifications = '/notifications';
+
+  // Admin
+  static const String users = '/users';
+  static const String schoolProfile = '/school/profile';
+  static const String academicYears = '/school/academic-years';
 }

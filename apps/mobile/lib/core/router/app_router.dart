@@ -7,6 +7,11 @@ import '../../presentation/auth/otp_screen.dart';
 import '../../presentation/auth/set_password_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
 import '../../presentation/shell/main_shell.dart';
+import '../../presentation/profile/profile_screen.dart';
+import '../../presentation/admin/screens/user_list_screen.dart';
+import '../../presentation/admin/screens/user_form_screen.dart';
+import '../../presentation/admin/screens/import_user_screen.dart';
+import '../../presentation/admin/screens/school_profile_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -63,7 +68,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/profile',
-            builder: (context, state) => const ProfileShell(),
+            builder: (context, state) => const ProfileScreen(),
           ),
         ],
       ),
@@ -76,6 +81,35 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/attendance',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const AttendanceScreen(),
+      ),
+      GoRoute(
+        path: '/admin/users',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const UserListScreen(),
+      ),
+      GoRoute(
+        path: '/admin/users/create',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const UserFormScreen(),
+      ),
+      GoRoute(
+        path: '/admin/users/:id/edit',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final user = state.extra as Map<String, dynamic>?;
+          return UserFormScreen(userId: id, userData: user);
+        },
+      ),
+      GoRoute(
+        path: '/admin/users/import',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ImportUserScreen(),
+      ),
+      GoRoute(
+        path: '/admin/school',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SchoolProfileScreen(),
       ),
     ],
   );
@@ -114,15 +148,6 @@ class NotificationsShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text('Notifications'));
-  }
-}
-
-class ProfileShell extends StatelessWidget {
-  const ProfileShell({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Profile'));
   }
 }
 

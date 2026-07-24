@@ -4,6 +4,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { SchoolModule } from './school/school.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { AuthModule } from './auth/auth.module';
     EventEmitterModule.forRoot(),
     PrismaModule,
     AuthModule,
+    UsersModule,
+    SchoolModule,
   ],
 })
 export class AppModule {}

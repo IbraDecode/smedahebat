@@ -5,10 +5,10 @@ export class LoginDto {
   @ApiProperty({ example: '12345' })
   @IsString()
   @MinLength(4)
-  nis: string;
+  nis!: string;
 
   @ApiProperty({ example: 'StrongP@ss123' })
   @IsString()
   @MinLength(8)
-  password: string;
+  password!: string;
 }

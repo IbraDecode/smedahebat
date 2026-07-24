@@ -6,12 +6,12 @@ export class RegisterDto {
   @ApiProperty({ example: '12345' })
   @IsString()
   @MinLength(4)
-  nis: string;
+  nis!: string;
 
   @ApiProperty({ example: 'Budi Santoso' })
   @IsString()
   @MinLength(3)
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({ example: 'budi@school.com' })
   @IsEmail()
@@ -20,7 +20,7 @@ export class RegisterDto {
 
   @ApiProperty({ example: '2006-01-15' })
   @IsDateString()
-  birthDate: string;
+  birthDate!: string;
 
   @ApiProperty({ enum: Role, default: Role.SISWA })
   @IsEnum(Role)
@@ -31,21 +31,21 @@ export class RegisterDto {
 export class VerifyOtpDto {
   @ApiProperty({ example: '12345' })
   @IsString()
-  nis: string;
+  nis!: string;
 
   @ApiProperty({ example: '123456' })
   @IsString()
   @MinLength(6)
-  otp: string;
+  otp!: string;
 }
 
 export class SetPasswordDto {
   @ApiProperty({ example: '12345' })
   @IsString()
-  nis: string;
+  nis!: string;
 
   @ApiProperty({ example: 'StrongP@ss123' })
   @IsString()
   @MinLength(8)
-  password: string;
+  password!: string;
 }

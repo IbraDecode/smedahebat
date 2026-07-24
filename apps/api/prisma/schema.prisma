@@ -21,32 +21,73 @@ enum Gender {
   P
 }
 
+model School {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  website   String?
+  logo      String?
+  npsn      String?  @unique
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users         User[]
+  academicYears AcademicYear[]
+}
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  schoolId  String
+  year      String
+  semester  Int      @default(1)
+  isActive  Boolean  @default(false)
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  users  User[]
+
+  @@index([schoolId])
+  @@unique([schoolId, year, semester])
+}
+
 model User {
-  id           String   @id @default(cuid())
-  nis          String   @unique
-  nip          String?  @unique
-  name         String
-  email        String?  @unique
-  password     String
-  role         Role     @default(SISWA)
-  gender       Gender?
-  phone        String?
-  address      String?
-  photo        String?
-  birthDate    DateTime?
-  birthPlace   String?
-  isActive     Boolean  @default(true)
-  isFirstLogin Boolean  @default(true)
-  lastLogin    DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String        @id @default(cuid())
+  nis            String        @unique
+  nip            String?       @unique
+  name           String
+  email          String?       @unique
+  password       String
+  role           Role          @default(SISWA)
+  gender         Gender?
+  phone          String?
+  address        String?
+  photo          String?
+  birthDate      DateTime?
+  birthPlace     String?
+  isActive       Boolean       @default(true)
+  isFirstLogin   Boolean       @default(true)
+  lastLogin      DateTime?
+  schoolId       String?
+  academicYearId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   sessions      Session[]
   refreshTokens RefreshToken[]
+  school        School?       @relation(fields: [schoolId], references: [id])
+  academicYear  AcademicYear? @relation(fields: [academicYearId], references: [id])
 
   @@index([role])
   @@index([nis])
   @@index([isActive])
+  @@index([schoolId])
+  @@index([academicYearId])
 }
 
 model Session {
