@@ -39,6 +39,7 @@ model School {
   grades        Grade[]
   classes       Class[]
   subjects      Subject[]
+  teacherSubjects TeacherSubject[]
 }
 
 model AcademicYear {
@@ -87,6 +88,7 @@ model User {
   school        School?       @relation(fields: [schoolId], references: [id])
   academicYear  AcademicYear? @relation(fields: [academicYearId], references: [id])
   class         Class?        @relation(fields: [classId], references: [id])
+  teacherSubjects TeacherSubject[]
 
   @@index([role])
   @@index([nis])
@@ -125,6 +127,7 @@ model Class {
   school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   grade       Grade    @relation(fields: [gradeId], references: [id], onDelete: Cascade)
   users       User[]
+  teacherSubjects TeacherSubject[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -142,9 +145,59 @@ model Subject {
   updatedAt   DateTime @updatedAt
 
   school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  teacherSubjects TeacherSubject[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
+}
+
+enum Day {
+  SENIN
+  SELASA
+  RABU
+  KAMIS
+  JUMAT
+  SABTU
+}
+
+model TeacherSubject {
+  id          String   @id @default(cuid())
+  teacherId   String
+  subjectId   String
+  classId     String
+  schoolId    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  teacher     User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  class       Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  schedules   Schedule[]
+  @@unique([teacherId, subjectId, classId])
+  @@index([teacherId])
+  @@index([subjectId])
+  @@index([classId])
+  @@index([schoolId])
+}
+
+model Schedule {
+  id                String   @id @default(cuid())
+  teacherSubjectId  String
+  day               Day
+  startTime         String   // "07:30"
+  endTime           String   // "08:15"
+  room              String?
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  teacherSubject    TeacherSubject @relation(fields: [teacherSubjectId], references: [id], onDelete: Cascade)
+
+  @@index([teacherSubjectId])
+  @@index([day])
 }
 
 model Session {

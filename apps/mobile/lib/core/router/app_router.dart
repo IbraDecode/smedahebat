@@ -11,6 +11,8 @@ import '../../presentation/profile/profile_screen.dart';
 import '../../presentation/dashboard/dashboard_screen.dart';
 import '../../presentation/academic/academic_home_screen.dart';
 import '../../presentation/academic/screens/schedule_screen.dart';
+import '../../presentation/academic/screens/schedule_management_screen.dart';
+import '../../presentation/academic/screens/schedule_form_screen.dart';
 import '../../presentation/academic/screens/subjects_screen.dart';
 import '../../presentation/academic/screens/classes_screen.dart';
 import '../../presentation/admin/screens/user_list_screen.dart';
@@ -81,6 +83,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/academic/schedule',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ScheduleScreen(),
+      ),
+      GoRoute(
+        path: '/academic/schedule/manage',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ScheduleManagementScreen(),
+      ),
+      GoRoute(
+        path: '/academic/schedule/create',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ScheduleFormScreen(extra: extra);
+        },
+      ),
+      GoRoute(
+        path: '/academic/schedule/:id/edit',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final extra = state.extra as Map<String, dynamic>?;
+          return ScheduleFormScreen(scheduleId: id, extra: extra);
+        },
       ),
       GoRoute(
         path: '/academic/subjects',

@@ -34,6 +34,13 @@ const _menuItems = [
     route: '/academic/subjects',
   ),
   _AcademicMenuItem(
+    label: 'Kelola Jadwal',
+    icon: Icons.edit_calendar_outlined,
+    color: AppColors.accent,
+    route: '/academic/schedule/manage',
+    requiredRole: 'admin',
+  ),
+  _AcademicMenuItem(
     label: 'Kelas',
     icon: Icons.meeting_room_outlined,
     color: AppColors.secondary,
