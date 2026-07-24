@@ -130,9 +130,9 @@ class DashboardScreen extends ConsumerWidget {
         if (data?.upcomingTasks != null &&
             data!.upcomingTasks.isNotEmpty) ...[
           const SizedBox(height: 24),
-          _buildSectionHeader(context, 'Tugas Mendatang'),
+          _buildSectionHeader(context, 'Tugas Mendatang', onSeeAll: () => context.push('/assignments')),
           const SizedBox(height: 12),
-          ...data.upcomingTasks.take(5).map(
+          ...data.upcomingTasks.take(3).map(
                 (t) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: TaskCard(
@@ -141,6 +141,7 @@ class DashboardScreen extends ConsumerWidget {
                     subject: t.subject,
                     deadline: t.deadline,
                     status: t.status,
+                    onTap: () => context.push('/assignments/${t.id}'),
                   ),
                 ),
               ),

@@ -13,6 +13,10 @@ import '../../presentation/academic/academic_home_screen.dart';
 import '../../presentation/academic/screens/schedule_screen.dart';
 import '../../presentation/academic/screens/schedule_management_screen.dart';
 import '../../presentation/academic/screens/schedule_form_screen.dart';
+import '../../presentation/assignment/screens/assignment_list_screen.dart';
+import '../../presentation/assignment/screens/assignment_detail_screen.dart';
+import '../../presentation/assignment/screens/assignment_form_screen.dart';
+import '../../presentation/assignment/screens/grade_submission_screen.dart';
 import '../../presentation/academic/screens/subjects_screen.dart';
 import '../../presentation/academic/screens/classes_screen.dart';
 import '../../presentation/attendance/screens/qr_generator_screen.dart';
@@ -204,6 +208,42 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return AnnouncementDetailScreen(id: id);
+        },
+      ),
+      GoRoute(
+        path: '/assignments',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AssignmentListScreen(),
+      ),
+      GoRoute(
+        path: '/assignments/create',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AssignmentFormScreen(),
+      ),
+      GoRoute(
+        path: '/assignments/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return AssignmentDetailScreen(id: id);
+        },
+      ),
+      GoRoute(
+        path: '/assignments/:id/edit',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final extra = state.extra as Map<String, dynamic>?;
+          return AssignmentFormScreen(assignmentId: id, extra: extra);
+        },
+      ),
+      GoRoute(
+        path: '/assignments/:id/grade/:submissionId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final submissionId = state.pathParameters['submissionId']!;
+          return GradeSubmissionScreen(assignmentId: id, submissionId: submissionId);
         },
       ),
     ],

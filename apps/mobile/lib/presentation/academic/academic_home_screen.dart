@@ -61,6 +61,12 @@ const _menuItems = [
     requiredRole: 'teacher',
   ),
   _AcademicMenuItem(
+    label: 'Tugas',
+    icon: Icons.assignment_outlined,
+    color: AppColors.warning,
+    route: '/assignments',
+  ),
+  _AcademicMenuItem(
     label: 'Scan QR',
     icon: Icons.qr_code_scanner,
     color: AppColors.info,

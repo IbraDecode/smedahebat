@@ -10,6 +10,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { AcademicModule } from './academic/academic.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { NotificationModule } from './notification/notification.module';
+import { AssignmentModule } from './assignment/assignment.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -32,6 +35,12 @@ import { NotificationModule } from './notification/notification.module';
     AcademicModule,
     AttendanceModule,
     NotificationModule,
+    AssignmentModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+      exclude: ['/api/*'],
+    }),
   ],
 })
 export class AppModule {}

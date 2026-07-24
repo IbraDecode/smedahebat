@@ -41,6 +41,7 @@ model School {
   subjects      Subject[]
   teacherSubjects TeacherSubject[]
   announcements Announcement[]
+  assignments    Assignment[]
 }
 
 model AcademicYear {
@@ -95,6 +96,8 @@ model User {
   announcements     Announcement[]     @relation("UserAnnouncements")
   announcementReads AnnouncementRead[]
   notifications     Notification[]
+  teacherAssignments Assignment[]      @relation("TeacherAssignments")
+  submissions        Submission[]      @relation("StudentSubmissions")
 
   @@index([role])
   @@index([nis])
@@ -136,6 +139,7 @@ model Class {
   teacherSubjects TeacherSubject[]
   attendanceSessions AttendanceSession[]
   announcements Announcement[]
+  assignments    Assignment[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -155,6 +159,7 @@ model Subject {
   school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   teacherSubjects TeacherSubject[]
   attendanceSessions AttendanceSession[]
+  assignments        Assignment[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -339,6 +344,56 @@ model AnnouncementRead {
 
   @@unique([announcementId, userId])
   @@index([userId])
+}
+
+model Assignment {
+  id              String    @id @default(cuid())
+  schoolId        String
+  teacherId       String
+  subjectId       String
+  classId         String
+  title           String
+  description     String?
+  attachment      String?
+  maxScore        Int       @default(100)
+  deadline        DateTime
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  school          School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  teacher         User      @relation("TeacherAssignments", fields: [teacherId], references: [id])
+  subject         Subject   @relation(fields: [subjectId], references: [id])
+  class           Class     @relation(fields: [classId], references: [id])
+
+  submissions     Submission[]
+
+  @@index([schoolId])
+  @@index([teacherId])
+  @@index([classId])
+  @@index([deadline])
+}
+
+model Submission {
+  id              String   @id @default(cuid())
+  assignmentId    String
+  studentId       String
+  content         String?
+  attachment      String?
+  score           Int?
+  feedback        String?
+  isLate          Boolean  @default(false)
+  submittedAt     DateTime @default(now())
+  gradedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  assignment      Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student         User       @relation("StudentSubmissions", fields: [studentId], references: [id])
+
+  @@unique([assignmentId, studentId])
+  @@index([assignmentId])
+  @@index([studentId])
 }
 
 model Notification {
