@@ -107,7 +107,7 @@ class DashboardScreen extends ConsumerWidget {
         if (data?.recentAnnouncements != null &&
             data!.recentAnnouncements.isNotEmpty) ...[
           const SizedBox(height: 24),
-          _buildSectionHeader(context, 'Pengumuman Terbaru', onSeeAll: () {}),
+          _buildSectionHeader(context, 'Pengumuman Terbaru', onSeeAll: () => context.push('/announcements')),
           const SizedBox(height: 12),
           ...data.recentAnnouncements.take(3).map(
                 (a) => Padding(

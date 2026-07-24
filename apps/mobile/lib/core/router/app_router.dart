@@ -23,6 +23,10 @@ import '../../presentation/admin/screens/user_list_screen.dart';
 import '../../presentation/admin/screens/user_form_screen.dart';
 import '../../presentation/admin/screens/import_user_screen.dart';
 import '../../presentation/admin/screens/school_profile_screen.dart';
+import '../../presentation/notification/screens/announcement_list_screen.dart';
+import '../../presentation/notification/screens/announcement_detail_screen.dart';
+import '../../presentation/notification/screens/announcement_form_screen.dart';
+import '../../presentation/notification/screens/notification_inbox_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -75,7 +79,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/notifications',
-            builder: (context, state) => const NotificationsShell(),
+            builder: (context, state) => const NotificationInboxScreen(),
+          ),
+          GoRoute(
+            path: '/announcements',
+            builder: (context, state) => const AnnouncementListScreen(),
           ),
           GoRoute(
             path: '/profile',
@@ -185,6 +193,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const SchoolProfileScreen(),
       ),
+      GoRoute(
+        path: '/announcements/create',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AnnouncementFormScreen(),
+      ),
+      GoRoute(
+        path: '/announcements/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return AnnouncementDetailScreen(id: id);
+        },
+      ),
     ],
   );
 });
@@ -195,15 +216,6 @@ class ActivityShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text('Activity'));
-  }
-}
-
-class NotificationsShell extends StatelessWidget {
-  const NotificationsShell({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Notifications'));
   }
 }
 

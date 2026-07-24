@@ -39,7 +39,11 @@ class ApiEndpoints {
   static const String attendanceByClass = '/attendance/class';
   static const String attendanceMy = '/attendance/my';
   static const String attendanceRecap = '/attendance/recap';
+  static const String announcements = '/announcements';
   static const String notifications = '/notifications';
+  static const String notificationsRead = '/notifications/read';
+  static const String notificationsReadAll = '/notifications/read-all';
+  static const String notificationsUnreadCount = '/notifications/unread-count';
 
   static const String teacherSubjects = '/academic/teacher-subjects';
   static const String schedules = '/academic/schedules';
