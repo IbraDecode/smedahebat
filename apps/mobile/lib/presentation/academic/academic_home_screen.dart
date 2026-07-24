@@ -48,6 +48,32 @@ const _menuItems = [
     requiredRole: 'admin',
   ),
   _AcademicMenuItem(
+    label: 'Absensi',
+    icon: Icons.qr_code_scanner,
+    color: AppColors.primary,
+    route: '/attendance/history',
+  ),
+  _AcademicMenuItem(
+    label: 'Generate QR',
+    icon: Icons.qr_code_2,
+    color: AppColors.accent,
+    route: '/attendance/generate',
+    requiredRole: 'teacher',
+  ),
+  _AcademicMenuItem(
+    label: 'Scan QR',
+    icon: Icons.qr_code_scanner,
+    color: AppColors.info,
+    route: '/attendance/scan',
+    requiredRole: 'student',
+  ),
+  _AcademicMenuItem(
+    label: 'Rekap Absensi',
+    icon: Icons.pie_chart_outline,
+    color: AppColors.success,
+    route: '/attendance/recap',
+  ),
+  _AcademicMenuItem(
     label: 'Nilai',
     icon: Icons.grading_outlined,
     color: AppColors.warning,

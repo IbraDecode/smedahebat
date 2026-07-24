@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../auth/auth_provider.dart';
 import '../common/widgets/error_state.dart';
@@ -101,6 +102,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
           ),
         _buildQuickStats(context, data?.stats, auth.role),
+        const SizedBox(height: 24),
+        _buildAttendanceCard(context, auth.role),
         if (data?.recentAnnouncements != null &&
             data!.recentAnnouncements.isNotEmpty) ...[
           const SizedBox(height: 24),
@@ -225,6 +228,123 @@ class DashboardScreen extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildAttendanceCard(BuildContext context, String? role) {
+    if (role == 'admin') return const SizedBox.shrink();
+
+    final isTeacher = role == 'teacher';
+    final primaryLabel = isTeacher ? 'Generate QR Absensi' : 'Scan QR Absensi';
+    final primaryIcon = isTeacher ? Icons.qr_code_2 : Icons.qr_code_scanner;
+    final primaryRoute = isTeacher ? '/attendance/generate' : '/attendance/scan';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.qr_code, color: Colors.white, size: 24),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Absensi',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      isTeacher
+                          ? 'Buat sesi absensi untuk kelas'
+                          : 'Scan QR untuk presensi',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.8),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildAttendanceAction(
+                  icon: primaryIcon,
+                  label: primaryLabel,
+                  onTap: () => context.push(primaryRoute),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildAttendanceAction(
+                  icon: Icons.history,
+                  label: 'Riwayat',
+                  onTap: () => context.push('/attendance/history'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAttendanceAction({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.white.withValues(alpha: 0.2),
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 16),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

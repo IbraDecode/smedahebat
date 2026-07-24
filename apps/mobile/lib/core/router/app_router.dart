@@ -15,6 +15,10 @@ import '../../presentation/academic/screens/schedule_management_screen.dart';
 import '../../presentation/academic/screens/schedule_form_screen.dart';
 import '../../presentation/academic/screens/subjects_screen.dart';
 import '../../presentation/academic/screens/classes_screen.dart';
+import '../../presentation/attendance/screens/qr_generator_screen.dart';
+import '../../presentation/attendance/screens/qr_scanner_screen.dart';
+import '../../presentation/attendance/screens/attendance_history_screen.dart';
+import '../../presentation/attendance/screens/attendance_recap_screen.dart';
 import '../../presentation/admin/screens/user_list_screen.dart';
 import '../../presentation/admin/screens/user_form_screen.dart';
 import '../../presentation/admin/screens/import_user_screen.dart';
@@ -117,9 +121,40 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ClassesScreen(),
       ),
       GoRoute(
-        path: '/attendance',
+        path: '/attendance/generate',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const AttendanceScreen(),
+        builder: (context, state) => const QrGeneratorScreen(),
+      ),
+      GoRoute(
+        path: '/attendance/scan',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const QrScannerScreen(),
+      ),
+      GoRoute(
+        path: '/attendance/history',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AttendanceHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/attendance/recap',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AttendanceRecapScreen(),
+      ),
+      GoRoute(
+        path: '/attendance/recap/:classId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final classId = state.pathParameters['classId']!;
+          return AttendanceRecapScreen(classId: classId);
+        },
+      ),
+      GoRoute(
+        path: '/attendance/history/:classId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final classId = state.pathParameters['classId']!;
+          return AttendanceHistoryScreen(classId: classId);
+        },
       ),
       GoRoute(
         path: '/admin/users',
@@ -172,14 +207,4 @@ class NotificationsShell extends StatelessWidget {
   }
 }
 
-class AttendanceScreen extends StatelessWidget {
-  const AttendanceScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Absensi')),
-      body: const Center(child: Text('Attendance Screen')),
-    );
-  }
-}

@@ -89,6 +89,8 @@ model User {
   academicYear  AcademicYear? @relation(fields: [academicYearId], references: [id])
   class         Class?        @relation(fields: [classId], references: [id])
   teacherSubjects TeacherSubject[]
+  attendanceSessions AttendanceSession[]
+  attendances       Attendance[]
 
   @@index([role])
   @@index([nis])
@@ -128,6 +130,7 @@ model Class {
   grade       Grade    @relation(fields: [gradeId], references: [id], onDelete: Cascade)
   users       User[]
   teacherSubjects TeacherSubject[]
+  attendanceSessions AttendanceSession[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -146,6 +149,7 @@ model Subject {
 
   school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   teacherSubjects TeacherSubject[]
+  attendanceSessions AttendanceSession[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -195,6 +199,7 @@ model Schedule {
   updatedAt         DateTime @updatedAt
 
   teacherSubject    TeacherSubject @relation(fields: [teacherSubjectId], references: [id], onDelete: Cascade)
+  attendanceSessions AttendanceSession[]
 
   @@index([teacherSubjectId])
   @@index([day])
@@ -230,4 +235,56 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+enum AttendanceStatus {
+  HADIR
+  SAKIT
+  IZIN
+  ALPA
+  TERLAMBAT
+}
+
+model AttendanceSession {
+  id          String   @id @default(cuid())
+  teacherId   String
+  scheduleId  String?
+  classId     String
+  subjectId   String?
+  token       String   @unique
+  expiresAt   DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  teacher     User     @relation(fields: [teacherId], references: [id])
+  schedule    Schedule? @relation(fields: [scheduleId], references: [id])
+  class       Class    @relation(fields: [classId], references: [id])
+  subject     Subject? @relation(fields: [subjectId], references: [id])
+
+  attendances Attendance[]
+
+  @@index([token])
+  @@index([teacherId])
+  @@index([classId])
+  @@index([isActive])
+}
+
+model Attendance {
+  id          String           @id @default(cuid())
+  sessionId   String
+  userId      String
+  status      AttendanceStatus @default(HADIR)
+  timestamp   DateTime         @default(now())
+  latitude    Float?
+  longitude   Float?
+  note        String?
+  createdAt   DateTime         @default(now())
+
+  session     AttendanceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@index([userId])
+  @@index([sessionId])
 }

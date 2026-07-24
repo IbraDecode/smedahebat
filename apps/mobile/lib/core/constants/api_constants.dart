@@ -32,6 +32,13 @@ class ApiEndpoints {
   static const String dashboard = '/dashboard';
   static const String schedule = '/academic/schedule';
   static const String attendance = '/attendance';
+  static const String attendanceGenerate = '/attendance/generate';
+  static const String attendanceScan = '/attendance/scan';
+  static const String attendanceSession = '/attendance/session';
+  static const String attendanceActiveSession = '/attendance/active-session';
+  static const String attendanceByClass = '/attendance/class';
+  static const String attendanceMy = '/attendance/my';
+  static const String attendanceRecap = '/attendance/recap';
   static const String notifications = '/notifications';
 
   static const String teacherSubjects = '/academic/teacher-subjects';
