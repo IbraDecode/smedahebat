@@ -8,6 +8,11 @@ import '../../presentation/auth/set_password_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
 import '../../presentation/shell/main_shell.dart';
 import '../../presentation/profile/profile_screen.dart';
+import '../../presentation/dashboard/dashboard_screen.dart';
+import '../../presentation/academic/academic_home_screen.dart';
+import '../../presentation/academic/screens/schedule_screen.dart';
+import '../../presentation/academic/screens/subjects_screen.dart';
+import '../../presentation/academic/screens/classes_screen.dart';
 import '../../presentation/admin/screens/user_list_screen.dart';
 import '../../presentation/admin/screens/user_form_screen.dart';
 import '../../presentation/admin/screens/import_user_screen.dart';
@@ -52,11 +57,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/',
-            builder: (context, state) => const DashboardShell(),
+            builder: (context, state) => const DashboardScreen(),
           ),
           GoRoute(
             path: '/academic',
-            builder: (context, state) => const AcademicShell(),
+            builder: (context, state) => const AcademicHomeScreen(),
           ),
           GoRoute(
             path: '/activity',
@@ -76,6 +81,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/academic/schedule',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ScheduleScreen(),
+      ),
+      GoRoute(
+        path: '/academic/subjects',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SubjectsScreen(),
+      ),
+      GoRoute(
+        path: '/academic/classes',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ClassesScreen(),
       ),
       GoRoute(
         path: '/attendance',
@@ -115,24 +130,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class DashboardShell extends StatelessWidget {
-  const DashboardShell({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Dashboard'));
-  }
-}
-
-class AcademicShell extends StatelessWidget {
-  const AcademicShell({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Academic'));
-  }
-}
-
 class ActivityShell extends StatelessWidget {
   const ActivityShell({super.key});
 
@@ -148,18 +145,6 @@ class NotificationsShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text('Notifications'));
-  }
-}
-
-class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Jadwal')),
-      body: const Center(child: Text('Jadwal Screen')),
-    );
   }
 }
 

@@ -36,6 +36,9 @@ model School {
 
   users         User[]
   academicYears AcademicYear[]
+  grades        Grade[]
+  classes       Class[]
+  subjects      Subject[]
 }
 
 model AcademicYear {
@@ -75,6 +78,7 @@ model User {
   lastLogin      DateTime?
   schoolId       String?
   academicYearId String?
+  classId        String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -82,12 +86,65 @@ model User {
   refreshTokens RefreshToken[]
   school        School?       @relation(fields: [schoolId], references: [id])
   academicYear  AcademicYear? @relation(fields: [academicYearId], references: [id])
+  class         Class?        @relation(fields: [classId], references: [id])
 
   @@index([role])
   @@index([nis])
   @@index([isActive])
   @@index([schoolId])
   @@index([academicYearId])
+  @@index([classId])
+}
+
+model Grade {
+  id          String   @id @default(cuid())
+  schoolId    String
+  name        String   // e.g. "X", "XI", "XII"
+  alias       String?  // e.g. "10", "11", "12"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classes     Class[]
+
+  @@unique([schoolId, name])
+  @@index([schoolId])
+}
+
+model Class {
+  id          String   @id @default(cuid())
+  schoolId    String
+  gradeId     String
+  name        String   // e.g. "X RPL 1", "XI AKL 2"
+  code        String?  @unique // e.g. "X-RPL-1"
+  room        String?
+  capacity    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  grade       Grade    @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  users       User[]
+
+  @@unique([schoolId, name])
+  @@index([schoolId])
+  @@index([gradeId])
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  schoolId    String
+  name        String   // e.g. "Matematika", "Bahasa Indonesia"
+  code        String?  // e.g. "MTK", "BINDO"
+  category    String?  // e.g. "Wajib", "Peminatan", "Muatan Lokal"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, name])
+  @@index([schoolId])
 }
 
 model Session {
