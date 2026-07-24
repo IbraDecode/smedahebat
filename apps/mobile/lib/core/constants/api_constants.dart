@@ -66,6 +66,13 @@ class ApiEndpoints {
   static const String gradeRaporMy = '/grade/rapor/my';
   static const String gradeRaporPublish = '/grade/rapor/publish';
 
+  // Picket
+  static const String picket = '/picket';
+  static const String picketMy = '/picket/my';
+  static const String picketToday = '/picket/today';
+  static const String picketHistory = '/picket/history';
+  static const String picketStats = '/picket/stats';
+
   // Admin
   static const String users = '/users';
   static const String schoolProfile = '/school/profile';

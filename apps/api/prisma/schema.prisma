@@ -102,6 +102,8 @@ model User {
   submissions        Submission[]      @relation("StudentSubmissions")
   scores             Score[]
   reportCards        ReportCard[]
+  picketMembers      PicketMember[]
+  picketLogs         PicketLog[]
 
   @@index([role])
   @@index([nis])
@@ -145,7 +147,8 @@ model Class {
   announcements Announcement[]
   assignments    Assignment[]
   gradeComponents   GradeComponent[]
-  reportCards       ReportCard[]
+  reportCards        ReportCard[]
+  pickets            Picket[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -503,4 +506,51 @@ model ReportCardSubject {
 
   @@unique([reportCardId, subjectId])
   @@index([reportCardId])
+}
+
+model Picket {
+  id        String   @id @default(cuid())
+  classId   String
+  day       Day
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  class     Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
+  members   PicketMember[]
+  logs      PicketLog[]
+
+  @@unique([classId, day])
+  @@index([classId])
+}
+
+model PicketMember {
+  id        String   @id @default(cuid())
+  picketId  String
+  studentId String
+  createdAt DateTime @default(now())
+
+  picket    Picket   @relation(fields: [picketId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [studentId], references: [id])
+
+  @@unique([picketId, studentId])
+  @@index([studentId])
+}
+
+model PicketLog {
+  id         String   @id @default(cuid())
+  picketId   String
+  studentId  String
+  date       DateTime @default(now())
+  isDone     Boolean  @default(false)
+  doneAt     DateTime?
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  picket     Picket   @relation(fields: [picketId], references: [id], onDelete: Cascade)
+  student    User     @relation(fields: [studentId], references: [id])
+
+  @@unique([picketId, studentId, date])
+  @@index([studentId])
+  @@index([date])
 }
