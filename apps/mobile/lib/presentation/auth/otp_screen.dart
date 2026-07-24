@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../common/widgets/app_button.dart';
+import 'auth_provider.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
-  final String phoneNumber;
-
-  const OtpScreen({super.key, required this.phoneNumber});
+  const OtpScreen({super.key});
 
   @override
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
@@ -37,28 +36,42 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   void _verifyOtp() {
     final code = _codeControllers.map((c) => c.text).join();
     if (code.length == 6) {
-      context.go('/');
+      ref.read(authProvider.notifier).verifyOtp(code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final theme = Theme.of(context);
+
+    ref.listen(authProvider, (prev, next) {
+      if (!next.isLoading && prev?.isLoading == true && next.error == null) {
+        context.go('/set-password');
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Verify OTP')),
+      appBar: AppBar(
+        title: const Text('Verifikasi'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
             const SizedBox(height: 60),
             Text(
-              'Enter Verification Code',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Masukkan Kode Verifikasi',
+              style: theme.textTheme.headlineMedium,
             ),
             const SizedBox(height: 12),
             Text(
-              'We sent a code to ${widget.phoneNumber}',
-              style: Theme.of(context).textTheme.bodyMedium,
+              'Kode telah dikirim ke NIS kamu',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
@@ -83,7 +96,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       fillColor: AppColors.surface,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.border),
+                        borderSide:
+                            const BorderSide(color: AppColors.border),
                       ),
                     ),
                     onChanged: (value) => _onCodeChanged(value, index),
@@ -91,19 +105,27 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 );
               }),
             ),
+            if (authState.error != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                authState.error!,
+                style: const TextStyle(color: AppColors.error),
+              ),
+            ],
             const SizedBox(height: 40),
             AppButton(
-              label: 'Verify',
+              label: 'Verifikasi',
+              isLoading: authState.isLoading,
               onPressed: _verifyOtp,
             ),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Didn't receive code?"),
+                const Text("Tidak menerima kode?"),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('Resend'),
+                  child: const Text('Kirim Ulang'),
                 ),
               ],
             ),

@@ -10,6 +10,7 @@ class AppTextField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final bool isPassword;
   final bool isPhone;
+  final bool obscureText;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final Widget? prefixIcon;
@@ -19,6 +20,7 @@ class AppTextField extends StatefulWidget {
   final bool enabled;
   final AutovalidateMode? autovalidateMode;
   final FocusNode? focusNode;
+  final ValueChanged<String>? onSubmitted;
 
   const AppTextField({
     super.key,
@@ -30,6 +32,7 @@ class AppTextField extends StatefulWidget {
     this.validator,
     this.isPassword = false,
     this.isPhone = false,
+    this.obscureText = false,
     this.keyboardType,
     this.textInputAction,
     this.prefixIcon,
@@ -39,6 +42,7 @@ class AppTextField extends StatefulWidget {
     this.enabled = true,
     this.autovalidateMode,
     this.focusNode,
+    this.onSubmitted,
   });
 
   @override
@@ -50,11 +54,13 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final isObfuscated = widget.isPassword ? _obscure : widget.obscureText;
+
     return TextFormField(
       controller: widget.controller,
       onChanged: widget.onChanged,
       validator: widget.validator,
-      obscureText: widget.isPassword ? _obscure : false,
+      obscureText: isObfuscated,
       keyboardType: widget.isPhone
           ? TextInputType.phone
           : widget.keyboardType,
@@ -64,6 +70,7 @@ class _AppTextFieldState extends State<AppTextField> {
       enabled: widget.enabled,
       autovalidateMode: widget.autovalidateMode,
       focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onSubmitted,
       style: const TextStyle(
         fontSize: 16,
         color: AppColors.textPrimary,
@@ -76,7 +83,9 @@ class _AppTextFieldState extends State<AppTextField> {
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
-                  _obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  _obscure
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   color: AppColors.textHint,
                 ),
                 onPressed: () => setState(() => _obscure = !_obscure),

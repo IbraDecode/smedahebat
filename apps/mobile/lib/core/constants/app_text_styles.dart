@@ -22,13 +22,13 @@ class AppTextStyles {
 
   static TextStyle get headlineLarge => const TextStyle(
         fontSize: 24,
-        fontWeight: FontWeight.semiBold,
+        fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get headlineMedium => const TextStyle(
         fontSize: 20,
-        fontWeight: FontWeight.semiBold,
+        fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       );
 

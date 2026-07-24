@@ -34,7 +34,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 CircleAvatar(
                   radius: 24,
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                   child: const Icon(
                     Icons.person,
                     color: AppColors.primary,
@@ -65,14 +65,14 @@ class DashboardScreen extends ConsumerWidget {
                   Text(
                     'Mathematics - Room 204',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '08:00 - 09:30',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                         ),
                   ),
                 ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../presentation/auth/login_screen.dart';
 import '../../presentation/auth/register_screen.dart';
 import '../../presentation/auth/otp_screen.dart';
+import '../../presentation/auth/set_password_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
 import '../../presentation/shell/main_shell.dart';
 
@@ -33,10 +34,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/otp',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
-          final phone = state.extra as String? ?? '';
-          return OtpScreen(phoneNumber: phone);
-        },
+        builder: (context, state) => const OtpScreen(),
+      ),
+      GoRoute(
+        path: '/set-password',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SetPasswordScreen(),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -129,8 +132,8 @@ class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Schedule')),
-      body: const Center(child: Text('Schedule Screen')),
+      appBar: AppBar(title: const Text('Jadwal')),
+      body: const Center(child: Text('Jadwal Screen')),
     );
   }
 }
@@ -141,7 +144,7 @@ class AttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Attendance')),
+      appBar: AppBar(title: const Text('Absensi')),
       body: const Center(child: Text('Attendance Screen')),
     );
   }
