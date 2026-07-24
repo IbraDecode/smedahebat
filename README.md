@@ -1,1 +1,0 @@
-smeda lop yu
