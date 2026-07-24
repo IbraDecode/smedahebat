@@ -56,6 +56,16 @@ class ApiEndpoints {
   static const String submissions = '/submissions';
   static const String submissionsMy = '/submissions/my';
 
+  // Grade & Rapor
+  static const String gradeComponents = '/grade/components';
+  static const String gradeScores = '/grade/scores';
+  static const String gradeScoresBulk = '/grade/scores/bulk';
+  static const String gradeScoresMy = '/grade/scores/my';
+  static const String gradeRapor = '/grade/rapor';
+  static const String gradeRaporGenerate = '/grade/rapor/generate';
+  static const String gradeRaporMy = '/grade/rapor/my';
+  static const String gradeRaporPublish = '/grade/rapor/publish';
+
   // Admin
   static const String users = '/users';
   static const String schoolProfile = '/school/profile';

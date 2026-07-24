@@ -83,13 +83,28 @@ const _menuItems = [
     label: 'Nilai',
     icon: Icons.grading_outlined,
     color: AppColors.warning,
-    route: '/academic/grades',
+    route: '/grade/my',
+    requiredRole: 'student',
+  ),
+  _AcademicMenuItem(
+    label: 'Input Nilai',
+    icon: Icons.edit_note_outlined,
+    color: AppColors.warning,
+    route: '/grade/input',
+    requiredRole: 'teacher',
+  ),
+  _AcademicMenuItem(
+    label: 'Komponen',
+    icon: Icons.fact_check_outlined,
+    color: AppColors.accent,
+    route: '/grade/components',
+    requiredRole: 'teacher',
   ),
   _AcademicMenuItem(
     label: 'Rapor',
     icon: Icons.description_outlined,
     color: AppColors.info,
-    route: '/academic/report',
+    route: '/grade/rapor',
   ),
 ];
 

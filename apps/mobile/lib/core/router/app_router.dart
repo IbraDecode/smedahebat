@@ -24,6 +24,12 @@ import '../../presentation/attendance/screens/qr_scanner_screen.dart';
 import '../../presentation/attendance/screens/attendance_history_screen.dart';
 import '../../presentation/attendance/screens/attendance_recap_screen.dart';
 import '../../presentation/admin/screens/user_list_screen.dart';
+import '../../presentation/grade/screens/grade_input_screen.dart';
+import '../../presentation/grade/screens/grade_component_screen.dart';
+import '../../presentation/grade/screens/component_form_screen.dart';
+import '../../presentation/grade/screens/my_grades_screen.dart';
+import '../../presentation/grade/screens/rapor_screen.dart';
+import '../../presentation/grade/screens/rapor_generate_screen.dart';
 import '../../presentation/admin/screens/user_form_screen.dart';
 import '../../presentation/admin/screens/import_user_screen.dart';
 import '../../presentation/admin/screens/school_profile_screen.dart';
@@ -244,6 +250,56 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           final submissionId = state.pathParameters['submissionId']!;
           return GradeSubmissionScreen(assignmentId: id, submissionId: submissionId);
+        },
+      ),
+      GoRoute(
+        path: '/grade/input',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const GradeInputScreen(),
+      ),
+      GoRoute(
+        path: '/grade/components',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const GradeComponentScreen(),
+      ),
+      GoRoute(
+        path: '/grade/components/create',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ComponentFormScreen(extra: extra);
+        },
+      ),
+      GoRoute(
+        path: '/grade/components/:id/edit',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final extra = state.extra as Map<String, dynamic>?;
+          return ComponentFormScreen(componentId: id, extra: extra);
+        },
+      ),
+      GoRoute(
+        path: '/grade/my',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const MyGradesScreen(),
+      ),
+      GoRoute(
+        path: '/grade/rapor',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const RaporScreen(),
+      ),
+      GoRoute(
+        path: '/grade/rapor/generate',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const RaporGenerateScreen(),
+      ),
+      GoRoute(
+        path: '/grade/rapor/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return RaporScreen(raporId: id);
         },
       ),
     ],

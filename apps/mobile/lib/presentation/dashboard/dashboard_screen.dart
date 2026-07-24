@@ -5,6 +5,8 @@ import '../../core/constants/app_colors.dart';
 import '../auth/auth_provider.dart';
 import '../common/widgets/error_state.dart';
 import '../common/widgets/shimmer_loading.dart';
+import '../grade/providers/grade_provider.dart';
+import '../grade/widgets/grade_badge.dart';
 import 'dashboard_provider.dart';
 import 'widgets/announcement_card.dart';
 import 'widgets/schedule_card.dart';
@@ -102,6 +104,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
           ),
         _buildQuickStats(context, data?.stats, auth.role),
+        const SizedBox(height: 24),
+        if (auth.role == 'student') _buildGradeSummary(context, ref),
         const SizedBox(height: 24),
         _buildAttendanceCard(context, auth.role),
         if (data?.recentAnnouncements != null &&
@@ -345,6 +349,125 @@ class DashboardScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGradeSummary(BuildContext context, WidgetRef ref) {
+    final gradeState = ref.watch(gradeProvider);
+    final myScores = gradeState.myScores;
+
+    if (myScores == null && !gradeState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(gradeProvider.notifier).fetchMyScores();
+      });
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Nilai Saya',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+              ),
+              TextButton(
+                onPressed: () => context.push('/grade/my'),
+                child: const Text('Lihat Detail'),
+              ),
+            ],
+          ),
+          if (gradeState.isLoading && myScores == null)
+            ShimmerBox(height: 60)
+          else if (myScores != null && myScores.subjects.isNotEmpty)
+            Column(
+              children: [
+                Row(
+                  children: [
+                    GradeBadge(score: myScores.average, size: 44),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rata-rata: ${myScores.average.toStringAsFixed(1)}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                        ),
+                        Text(
+                          '${myScores.total} komponen dinilai',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColors.textHint,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ...myScores.subjects.entries.take(3).map((e) {
+                  final avg = e.value.fold<double>(
+                    0,
+                    (sum, s) => sum + (s.score ?? 0).toDouble(),
+                  ) / (e.value.isNotEmpty ? e.value.length : 1);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        Icon(Icons.book, size: 14, color: AppColors.textHint),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            e.key,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        Text(
+                          avg.toStringAsFixed(0),
+                          style: TextStyle(
+                            color: gradeColor(avg),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                if (myScores.subjects.length > 3)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '+${myScores.subjects.length - 3} mapel lainnya',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.textHint,
+                          ),
+                    ),
+                  ),
+              ],
+            )
+          else
+            Text(
+              'Belum ada data nilai',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textHint,
+                  ),
+            ),
+        ],
       ),
     );
   }

@@ -11,6 +11,7 @@ import { AcademicModule } from './academic/academic.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { NotificationModule } from './notification/notification.module';
 import { AssignmentModule } from './assignment/assignment.module';
+import { GradeModule } from './grade/grade.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -36,6 +37,7 @@ import { join } from 'path';
     AttendanceModule,
     NotificationModule,
     AssignmentModule,
+    GradeModule,
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',

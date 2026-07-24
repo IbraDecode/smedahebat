@@ -57,6 +57,8 @@ model AcademicYear {
 
   school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   users  User[]
+  gradeComponents GradeComponent[]
+  reportCards     ReportCard[]
 
   @@index([schoolId])
   @@unique([schoolId, year, semester])
@@ -98,6 +100,8 @@ model User {
   notifications     Notification[]
   teacherAssignments Assignment[]      @relation("TeacherAssignments")
   submissions        Submission[]      @relation("StudentSubmissions")
+  scores             Score[]
+  reportCards        ReportCard[]
 
   @@index([role])
   @@index([nis])
@@ -140,6 +144,8 @@ model Class {
   attendanceSessions AttendanceSession[]
   announcements Announcement[]
   assignments    Assignment[]
+  gradeComponents   GradeComponent[]
+  reportCards       ReportCard[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -160,6 +166,8 @@ model Subject {
   teacherSubjects TeacherSubject[]
   attendanceSessions AttendanceSession[]
   assignments        Assignment[]
+  gradeComponents    GradeComponent[]
+  reportCardSubjects ReportCardSubject[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -411,4 +419,88 @@ model Notification {
   @@index([userId])
   @@index([isRead])
   @@index([createdAt])
+}
+
+model GradeComponent {
+  id              String   @id @default(cuid())
+  subjectId       String
+  classId         String
+  academicYearId  String
+  name            String   // "Tugas Harian 1", "UTS", "UAS", "Praktik"
+  type            String   // "tugas", "uts", "uas", "praktik"
+  weight          Int      @default(100)
+  maxScore        Int      @default(100)
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  subject         Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  class           Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  academicYear    AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+
+  scores          Score[]
+
+  @@index([subjectId])
+  @@index([classId])
+  @@index([academicYearId])
+}
+
+model Score {
+  id                String   @id @default(cuid())
+  componentId       String
+  studentId         String
+  score             Float
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  component         GradeComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  student           User           @relation(fields: [studentId], references: [id])
+
+  @@unique([componentId, studentId])
+  @@index([studentId])
+}
+
+model ReportCard {
+  id              String   @id @default(cuid())
+  studentId       String
+  classId         String
+  academicYearId  String
+  semester        Int      @default(1)
+  totalScore      Float?
+  averageScore    Float?
+  rank            Int?
+  notes           String?
+  isPublished      Boolean  @default(false)
+  publishedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  student         User           @relation(fields: [studentId], references: [id])
+  class           Class          @relation(fields: [classId], references: [id], onDelete: Cascade)
+  academicYear    AcademicYear   @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+
+  subjects        ReportCardSubject[]
+
+  @@unique([studentId, classId, academicYearId, semester])
+  @@index([studentId])
+  @@index([classId])
+}
+
+model ReportCardSubject {
+  id              String   @id @default(cuid())
+  reportCardId    String
+  subjectId       String
+  totalScore      Float
+  averageScore    Float
+  grade           String?  // A, B, C, D, E
+  description     String?  // "Baik", "Cukup", etc.
+  teacherNotes    String?
+  createdAt       DateTime @default(now())
+
+  reportCard      ReportCard @relation(fields: [reportCardId], references: [id], onDelete: Cascade)
+  subject         Subject    @relation(fields: [subjectId], references: [id])
+
+  @@unique([reportCardId, subjectId])
+  @@index([reportCardId])
 }
