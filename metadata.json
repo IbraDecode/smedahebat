@@ -1,0 +1,6 @@
+{
+  "name": "Smeda Hebat",
+  "description": "A clean educational application with modern Material 3 design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
