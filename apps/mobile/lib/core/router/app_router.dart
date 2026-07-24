@@ -37,6 +37,10 @@ import '../../presentation/notification/screens/announcement_list_screen.dart';
 import '../../presentation/notification/screens/announcement_detail_screen.dart';
 import '../../presentation/notification/screens/announcement_form_screen.dart';
 import '../../presentation/notification/screens/notification_inbox_screen.dart';
+import '../../presentation/picket/screens/picket_schedule_screen.dart';
+import '../../presentation/picket/screens/picket_checklist_screen.dart';
+import '../../presentation/picket/screens/picket_manage_screen.dart';
+import '../../presentation/picket/screens/picket_history_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -300,6 +304,42 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return RaporScreen(raporId: id);
+        },
+      ),
+      GoRoute(
+        path: '/picket',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PicketScheduleScreen(),
+      ),
+      GoRoute(
+        path: '/picket/checklist',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PicketChecklistScreen(),
+      ),
+      GoRoute(
+        path: '/picket/checklist/:classId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final classId = state.pathParameters['classId']!;
+          return PicketChecklistScreen(classId: classId);
+        },
+      ),
+      GoRoute(
+        path: '/picket/manage',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PicketManageScreen(),
+      ),
+      GoRoute(
+        path: '/picket/history',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const PicketHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/picket/history/:classId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final classId = state.pathParameters['classId']!;
+          return PicketHistoryScreen(classId: classId);
         },
       ),
     ],

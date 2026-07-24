@@ -74,6 +74,12 @@ const _menuItems = [
     requiredRole: 'student',
   ),
   _AcademicMenuItem(
+    label: 'Piket',
+    icon: Icons.checklist_rounded,
+    color: AppColors.primary,
+    route: '/picket',
+  ),
+  _AcademicMenuItem(
     label: 'Rekap Absensi',
     icon: Icons.pie_chart_outline,
     color: AppColors.success,

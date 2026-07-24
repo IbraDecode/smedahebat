@@ -7,6 +7,7 @@ import '../common/widgets/error_state.dart';
 import '../common/widgets/shimmer_loading.dart';
 import '../grade/providers/grade_provider.dart';
 import '../grade/widgets/grade_badge.dart';
+import '../picket/providers/picket_provider.dart';
 import 'dashboard_provider.dart';
 import 'widgets/announcement_card.dart';
 import 'widgets/schedule_card.dart';
@@ -108,6 +109,7 @@ class DashboardScreen extends ConsumerWidget {
         if (auth.role == 'student') _buildGradeSummary(context, ref),
         const SizedBox(height: 24),
         _buildAttendanceCard(context, auth.role),
+        _buildPicketCard(context, ref, auth),
         if (data?.recentAnnouncements != null &&
             data!.recentAnnouncements.isNotEmpty) ...[
           const SizedBox(height: 24),
@@ -558,6 +560,159 @@ class DashboardScreen extends ConsumerWidget {
             child: const Text('Lihat Semua'),
           ),
       ],
+    );
+  }
+
+  Widget _buildPicketCard(BuildContext context, WidgetRef ref, AuthState auth) {
+    if (auth.role != 'student') return const SizedBox.shrink();
+
+    final picketState = ref.watch(picketProvider);
+    final todayPicket = picketState.mySchedule.where((d) => d.isToday).toList();
+    final hasPicketToday = todayPicket.isNotEmpty && todayPicket.first.members.isNotEmpty;
+
+    if (!hasPicketToday && !picketState.isLoading && picketState.mySchedule.isEmpty) {
+      ref.read(picketProvider.notifier).fetchMySchedule();
+      return const SizedBox.shrink();
+    }
+
+    if (!hasPicketToday) return const SizedBox.shrink();
+
+    final members = todayPicket.first.members;
+    final doneCount = members.where((m) => m.isDone).length;
+    final allDone = doneCount >= members.length;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: allDone
+                ? [AppColors.success, AppColors.success.withValues(alpha: 0.8)]
+                : [AppColors.primary, AppColors.primaryDark],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.checklist_rounded, color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Piket Hari Ini',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        allDone ? 'Semua sudah check-in' : '$doneCount/${members.length} check-in',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '$doneCount/${members.length}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Material(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    child: InkWell(
+                      onTap: () => context.push('/picket/checklist'),
+                      borderRadius: BorderRadius.circular(10),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_circle_outline, color: Colors.white, size: 16),
+                            SizedBox(width: 6),
+                            Text(
+                              'Check-in',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Material(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    child: InkWell(
+                      onTap: () => context.push('/picket'),
+                      borderRadius: BorderRadius.circular(10),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.calendar_view_week, color: Colors.white, size: 16),
+                            SizedBox(width: 6),
+                            Text(
+                              'Jadwal',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
